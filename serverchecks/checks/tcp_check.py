@@ -4,7 +4,9 @@ from serverchecks import Outcome
 from serverchecks.checks import AbstractCheck
 
 
-class PortCheck(AbstractCheck):
+class TcpCheck(AbstractCheck):
+    name = 'TCP'
+
     def __init__(self, **kwargs) -> None:
         self.host: str = kwargs.get('host')
         self.port: int = kwargs.get('port')
@@ -17,5 +19,8 @@ class PortCheck(AbstractCheck):
         except OSError as e:
             return Outcome(False, f'TCP connection to {self.host}:{self.port} failed: {e}')
 
+    def __str__(self):
+        return f'<{self.name} {self.host}:{self.port}>'
 
-check_class = PortCheck
+
+check_class = TcpCheck
