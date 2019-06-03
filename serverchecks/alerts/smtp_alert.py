@@ -14,7 +14,7 @@ class SmtpAlert(AbstractAlert):
         self.from_email: str = kwargs.get('from_email')
         self.to_email: str = kwargs.get('to_email')
         self.subject: str = kwargs.get('subject')
-        self.smtp_server: str = kwargs.get('server', 'localhost')
+        self.smtp_server: str = kwargs.get('smtp_server', 'localhost')
         self.smtp_port: int = kwargs.get('smtp_port', 587)
 
         # optional SMTP authentication parameters
