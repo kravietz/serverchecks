@@ -1,39 +1,51 @@
 import smtplib
 import socket
 from email.message import EmailMessage
-from typing import Optional
 
 from serverchecks import Outcome
+from serverchecks.checks import AbstractCheck
 
 
-async def check(server: str, user: Optional[str] = None, password: Optional[str] = None, port: int = 25):
-    try:
-        smtp = smtplib.SMTP(server, timeout=2.0, port=port)
-    except socket.timeout as e:
-        return Outcome(False, f'SMTP {server}:{port} timed out: {e}')
+class SmtpCheck(AbstractCheck):
+    name = 'SMTP'
 
-    # STARTTLS usually requires EHLO
-    smtp.ehlo('example.com')
+    def __init__(self, **kwargs) -> None:
+        self.smtp_server: str = kwargs.get('smtp_server')
+        self.smtp_port: int = kwargs.get('smtp_port', 25)
+        self.username: str = kwargs.get('username', None)
+        self.password: str = kwargs.get('password', None)
 
-    try:
-        smtp.starttls()
-    except smtplib.SMTPNotSupportedError as e:
-        return Outcome(False, f'SMTP STARTTLS failed on {server}:{port}: {e}')
+    async def check(self) -> Outcome:
+        try:
+            smtp = smtplib.SMTP(self.smtp_server, timeout=2.0, port=self.smtp_port)
+        except socket.timeout as e:
+            return Outcome(False, f'SMTP {self.smtp_server}:{self.smtp_port} timed out: {e}')
 
-    auth = 'not authenticated'
+        # STARTTLS usually requires EHLO
+        smtp.ehlo(socket.getfqdn())
 
-    if user:
-        msg = EmailMessage()
-        msg.set_content('test')
-        msg['From'] = user
-        msg['To'] = user
-        msg['Subject'] = 'test'
+        try:
+            smtp.starttls()
+        except smtplib.SMTPNotSupportedError as e:
+            return Outcome(False, f'SMTP STARTTLS failed on {self.smtp_server}:{self.smtp_port}: {e}')
 
-        smtp.login(user, password)
-        smtp.send_message(msg, user, user)
+        auth = 'not authenticated'
 
-        auth = 'authenticated'
+        if self.username:
+            msg = EmailMessage()
+            msg.set_content('test')
+            msg['From'] = self.username
+            msg['To'] = self.username
+            msg['Subject'] = 'test'
 
-    smtp.quit()
+            smtp.login(self.username, self.password)
+            smtp.send_message(msg, self.username, self.username)
 
-    return Outcome(True, f'SMTP successful on {server}:{port}: {auth}')
+            auth = 'authenticated'
+
+        smtp.quit()
+
+        return Outcome(True, f'SMTP successful on {self.smtp_server}:{self.smtp_port}: {auth}')
+
+
+check_class = SmtpCheck
