@@ -43,7 +43,7 @@ class DnssecCheck(AbstractCheck):
 
                 # obtain DNSKEY from the nameserver
                 req_dnskey = dns.message.make_query(name, rdtype=dns.rdatatype.DNSKEY, want_dnssec=True)
-                response: Message = dns.query.udp(req_dnskey, nameserver_ip, timeout=2.0)
+                response: Message = dns.query.udp(req_dnskey, nameserver_ip, timeout=5.0)
             except (AttributeError, DNSException) as e:
                 return Outcome(False, f'DNSSEC: unable to obtain DNSKEY for {name}: {e}')
             else:
