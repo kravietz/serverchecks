@@ -49,6 +49,8 @@ class Pop3Check(AbstractCheck):
 
         self.pop3.close()
 
+        return Outcome(True, f'POP3 test successful on {self.pop3.host}:{self.pop3.port} (authenticated)')
+
     def __str__(self):
         return f'<{self.name} {self.pop3_server}>'
 
