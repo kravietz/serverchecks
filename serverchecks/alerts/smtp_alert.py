@@ -1,6 +1,6 @@
 import smtplib
 import socket
-from email.mime.text import MIMEText
+from email.message import EmailMessage
 
 from serverchecks.alerts import AbstractAlert
 
@@ -33,7 +33,8 @@ class SmtpAlert(AbstractAlert):
         self.smtp.noop()
 
     async def alert(self, message: str) -> None:
-        msg = MIMEText(message)
+        msg = EmailMessage()
+        msg.set_content(message)
         msg["From"] = self.from_email
         msg["To"] = self.to_email
         msg["Subject"] = self.subject
