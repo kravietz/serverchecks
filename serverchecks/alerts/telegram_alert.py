@@ -39,5 +39,8 @@ class TelegramAlert(AbstractAlert):
     async def close(self) -> None:
         await self.client.disconnect()
 
+    def __str__(self):
+        return f'<{self.name} {self.app_name}>'
+
 
 alert_class = TelegramAlert

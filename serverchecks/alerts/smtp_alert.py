@@ -9,6 +9,7 @@ class SmtpAlert(AbstractAlert):
     """
     Send alert in an email message over SMTP
     """
+    name = 'SMTP'
 
     def __init__(self, **kwargs) -> None:
         self.from_email: str = kwargs.get('from_email')
@@ -40,6 +41,9 @@ class SmtpAlert(AbstractAlert):
 
     async def close(self) -> None:
         self.smtp.quit()
+
+    def __str__(self):
+        return f'<{self.name} {self.from_email}>'
 
 
 alert_class = SmtpAlert

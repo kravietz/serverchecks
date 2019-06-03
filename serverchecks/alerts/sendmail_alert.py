@@ -10,6 +10,7 @@ class SendmailAlert(AbstractAlert):
     """
     Send alert using locally installed /usr/sbin/sendmail program
     """
+    name = 'SMTP'
 
     def __init__(self, **kwargs) -> None:
         self.from_email: str = kwargs.get('from_email')
@@ -27,6 +28,9 @@ class SendmailAlert(AbstractAlert):
 
     async def close(self) -> None:
         self.process.terminate()
+
+    def __str__(self):
+        return f'<{self.name} {self.from_email}>'
 
 
 alert_class = SendmailAlert
