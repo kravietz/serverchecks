@@ -6,6 +6,7 @@ from serverchecks.checks import AbstractCheck
 
 
 class ImapCheck(AbstractCheck):
+    name = 'IMAP'
 
     def __init__(self, **kwargs) -> None:
         self.imap_server: str = kwargs.get('imap_server')
@@ -48,6 +49,9 @@ class ImapCheck(AbstractCheck):
         self.imap.close()
 
         return Outcome(True, f'IMAP test successful on {self.imap.host}:{self.imap.port} (authenticated)')
+
+    def __str__(self):
+        return f'<{self.name} {self.imap_server}>'
 
 
 check_class = ImapCheck

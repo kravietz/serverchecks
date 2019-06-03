@@ -17,7 +17,7 @@ class BasicDnsAbstractCheck(AbstractCheck):
     * `expect` (optional) - list of strings, specific IP addresses that the hostname should resolve to
       Example: `expect: ['94.130.162.156', '2a01:4f8:13b:29a3::2']
     """
-    name = 'BasicDns'
+    name = 'BasicDNS'
 
     def __init__(self, **kwargs):
         self.fqdn = kwargs.get('fqdn')

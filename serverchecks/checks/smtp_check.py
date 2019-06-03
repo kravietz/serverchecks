@@ -47,5 +47,8 @@ class SmtpCheck(AbstractCheck):
 
         return Outcome(True, f'SMTP successful on {self.smtp_server}:{self.smtp_port}: {auth}')
 
+    def __str__(self):
+        return f'<{self.name} {self.smtp_server}>'
+
 
 check_class = SmtpCheck

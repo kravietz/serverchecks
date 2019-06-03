@@ -6,6 +6,7 @@ from serverchecks.checks import AbstractCheck
 
 
 class Pop3Check(AbstractCheck):
+    name = 'POP3'
 
     def __init__(self, **kwargs) -> None:
         self.pop3_server: str = kwargs.get('pop3_server')
@@ -47,6 +48,9 @@ class Pop3Check(AbstractCheck):
             return Outcome(False, f'POP3 status failed on {self.pop3.host}:{self.pop3.port}: {status}')
 
         self.pop3.close()
+
+    def __str__(self):
+        return f'<{self.name} {self.pop3_server}>'
 
 
 check_class = Pop3Check
