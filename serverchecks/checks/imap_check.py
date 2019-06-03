@@ -1,5 +1,5 @@
 import imaplib
-from typing import Union
+from typing import Union, Optional
 
 from serverchecks import Outcome
 from serverchecks.checks import AbstractCheck
@@ -9,13 +9,24 @@ class ImapCheck(AbstractCheck):
 
     def __init__(self, **kwargs) -> None:
         self.imap_server: str = kwargs.get('imap_server')
-        self.imap_mode: int = kwargs.get('imap_mode')
-        self.username: str = kwargs.get('username', None)
-        self.password: str = kwargs.get('password', None)
+
+        self.imap_mode: str = kwargs.get('imap_mode')
+        if self.imap_mode not in ('imaps', 'starttls'):
+            raise ValueError('imap_mode must be one of imaps_ssl or imap_starttls')
+
+        self.username: Optional[str] = kwargs.get('username', None)
+        self.password: Optional[str] = kwargs.get('password', None)
+        self.imap: Optional[Union[imaplib.IMAP4_SSL, imaplib.IMAP4]] = None
 
     async def check(self) -> Outcome:
-        self.imap: Union[imaplib.IMAP4_SSL, imaplib.IMAP4] = imaplib.IMAP4_SSL(
-            self.imap_server) if self.imap_mode == 'imaps' else imaplib.IMAP4(self.imap_server)
+        if self.imap_mode == 'imaps_ssl':
+            self.imap: imaplib.IMAP4_SSL = imaplib.IMAP4_SSL(self.imap_server)
+        else:
+            self.imap: imaplib.IMAP4 = imaplib.IMAP4(self.imap_server)
+            try:
+                self.imap.starttls()
+            except self.imap.error as e:
+                return Outcome(False, f'IMAP STARTTLS failed {self.imap.host}:{self.imap.port}: {e}')
 
         if not len(self.imap.capabilities) > 0:
             return Outcome(False,
