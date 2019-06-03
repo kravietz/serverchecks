@@ -39,13 +39,17 @@ class SmtpCheck(AbstractCheck):
             msg['Subject'] = 'test'
 
             smtp.login(self.username, self.password)
-            smtp.send_message(msg, self.username, self.username)
+
+            try:
+                smtp.send_message(msg, self.username, self.username)
+            except smtplib.SMTPException as e:
+                return Outcome(False, f'SMTP send failed on {self.smtp_server}:{self.smtp_port}: {e}')
 
             auth = 'authenticated'
 
         smtp.quit()
 
-        return Outcome(True, f'SMTP successful on {self.smtp_server}:{self.smtp_port}: {auth}')
+        return Outcome(True, f'SMTP successful on {self.smtp_server}:{self.smtp_port} ({auth})')
 
     def __str__(self):
         return f'<{self.name} {self.smtp_server}>'

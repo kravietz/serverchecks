@@ -37,8 +37,10 @@ class ImapCheck(AbstractCheck):
         if not self.username:
             return Outcome(True, f'IMAP test successful on {self.imap.host}:{self.imap.port} (not authenticated)')
 
-        if not self.imap.login(self.username, self.password):
-            return Outcome(False, f'IMAP login failed on {self.imap.host}:{self.imap.port}')
+        try:
+            self.imap.login(self.username, self.password)
+        except self.imap.error as e:
+            return Outcome(False, f'IMAP login failed on {self.imap.host}:{self.imap.port}: {e}')
 
         self.imap.select()
 
