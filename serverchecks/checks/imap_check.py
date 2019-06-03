@@ -12,8 +12,8 @@ class ImapCheck(AbstractCheck):
         self.imap_server: str = kwargs.get('imap_server')
 
         self.imap_mode: str = kwargs.get('imap_mode')
-        if self.imap_mode not in ('imaps', 'starttls'):
-            raise ValueError('imap_mode must be one of imaps_ssl or imap_starttls')
+        if self.imap_mode not in ('imaps_ssl', 'imap_starttls'):
+            raise ValueError(f'imap_mode must be one of imaps_ssl or imap_starttls: {self.imap_mode}')
 
         self.username: Optional[str] = kwargs.get('username', None)
         self.password: Optional[str] = kwargs.get('password', None)
