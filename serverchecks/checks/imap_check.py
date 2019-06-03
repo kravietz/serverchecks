@@ -1,39 +1,42 @@
 import imaplib
-from typing import Optional
+from typing import Union
 
 from serverchecks import Outcome
+from serverchecks.checks import AbstractCheck
 
 
-def _imap_test(imap: imaplib.IMAP4, user: Optional[str] = None, password: Optional[str] = None):
-    if not len(imap.capabilities) > 0:
-        return Outcome(False, f'IMAP capabilities are empty on {imap.host}:{imap.port}: {imap.capabilities}')
+class ImapCheck(AbstractCheck):
 
-    if not user:
-        return Outcome(True, f'IMAP test successful on {imap.host}:{imap.port} (not authenticated)')
+    def __init__(self, **kwargs) -> None:
+        self.imap_server: str = kwargs.get('imap_server')
+        self.imap_mode: int = kwargs.get('imap_mode')
+        self.username: str = kwargs.get('username', None)
+        self.password: str = kwargs.get('password', None)
 
-    if not imap.login(user, password):
-        return Outcome(False, f'IMAP login failed on {imap.host}:{imap.port}')
+    async def check(self) -> Outcome:
+        self.imap: Union[imaplib.IMAP4_SSL, imaplib.IMAP4] = imaplib.IMAP4_SSL(
+            self.imap_server) if self.imap_mode == 'imaps' else imaplib.IMAP4(self.imap_server)
 
-    imap.select()
-    status, messages = imap.search(None, 'ALL')
-    if status != 'OK':
-        return Outcome(False, f'Cannot search messages on {imap.host}:{imap.port}')
+        if not len(self.imap.capabilities) > 0:
+            return Outcome(False,
+                           f'IMAP capabilities are empty on {self.imap.host}:{self.imap.port}: {self.imap.capabilities}')
 
-    imap.close()
+        # skip any further tests in non-authenticated mode
+        if not self.username:
+            return Outcome(True, f'IMAP test successful on {self.imap.host}:{self.imap.port} (not authenticated)')
 
-    return Outcome(True, f'IMAP test successful on {imap.host}:{imap.port} (authenticated)')
+        if not self.imap.login(self.username, self.password):
+            return Outcome(False, f'IMAP login failed on {self.imap.host}:{self.imap.port}')
+
+        self.imap.select()
+
+        status, messages = self.imap.search(None, 'ALL')
+        if status != 'OK':
+            return Outcome(False, f'Cannot search messages on {self.imap.host}:{self.imap.port}')
+
+        self.imap.close()
+
+        return Outcome(True, f'IMAP test successful on {self.imap.host}:{self.imap.port} (authenticated)')
 
 
-async def check(server: str, user: Optional[str] = None, password: Optional[str] = None):
-    imap = imaplib.IMAP4_SSL(server)
-
-    return _imap_test(imap, user, password)
-
-
-async def imap_test(server: str, user: Optional[str] = None, password: Optional[str] = None):
-    imap = imaplib.IMAP4(server)
-
-    if not imap.starttls():
-        return Outcome(False, f'STARTTLS failed on {imap.host}:{imap.port}')
-
-    return _imap_test(imap, user, password)
+check_class = ImapCheck
