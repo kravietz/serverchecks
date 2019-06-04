@@ -51,6 +51,10 @@ async def command(config_file: str = None) -> None:
             if verbose:
                 print(f'Initialized alert class {alert}')
 
+    # open alert transports
+    transport_tasks = [instance.open() for instance in alerts]
+    await run_alerts(transport_tasks)
+
     # initialize the list of checks
     checks: List[AbstractCheck] = []
 
@@ -90,8 +94,8 @@ async def command(config_file: str = None) -> None:
 
     # clean up and close all active alert transports
     # this is important with some transports such as XMPP which may keep connection state on the server-side
-    for alert in alerts:
-        await alert.close()
+    transport_tasks = [instance.close() for instance in alerts]
+    await run_alerts(transport_tasks)
 
     sys.exit(0)
 

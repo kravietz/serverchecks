@@ -22,6 +22,7 @@ class SmtpAlert(AbstractAlert):
         self.username: str = kwargs.get('username', None)
         self.password: str = kwargs.get('password', None)
 
+    async def open(self) -> None:
         # open SMTP server connection
         self.smtp: smtplib.SMTP = smtplib.SMTP(self.smtp_server, timeout=5.0, port=self.smtp_port)
         self.smtp.ehlo(socket.getfqdn())

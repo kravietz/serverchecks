@@ -21,26 +21,30 @@ class MatrixAlert(AbstractAlert):
         self.password: str = kwargs.get('password')
         self.server: str = kwargs.get('server')
         self.domain: str = urlparse(self.server).hostname
+        self.room_name: str = kwargs.get('room')
+        self.recipients = kwargs.get('recipients')
+
         self.client: MatrixClient = MatrixClient(self.server)
 
+    async def open(self) -> None:
         self.token: str = self.client.login(username=self.username, password=self.password, device_id=socket.getfqdn())
-        self.room_name: str = kwargs.get('room')
+
         try:
             self.room: Room = self.client.join_room(f'#{self.room_name}:{self.domain}')
         except MatrixRequestError as e:
             if e.code == 404:
-                self.room = self.client.create_room(self.room_name, False, kwargs.get('invitees'))
+                self.room = self.client.create_room(self.room_name, False, self.recipients)
             else:
                 raise e
 
     async def alert(self, message: str) -> None:
-        response = self.room.send_text(message)
+        self.room.send_text(message)
 
     async def close(self) -> None:
         self.client.logout()
 
     def __str__(self) -> str:
-        return f'<{self.name}: ID={self.client.user_id} room={self.room_name}>'
+        return f'<{self.name}: ID={self.username} room={self.room_name}>'
 
 
 alert_class = MatrixAlert

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from telethon import TelegramClient
 from telethon.tl.types import User
 
@@ -21,19 +23,15 @@ class TelegramAlert(AbstractAlert):
         self.api_hash: str = kwargs.get('api_hash')
         self.app_name: str = kwargs.get('app_name')
         self.recipient: str = kwargs.get('recipient')
-        self.client = None
+        self.client: Optional[TelegramClient] = None
 
-    async def _init(self):
-        if self.client is None:
-            self.client = await TelegramClient(self.app_name, self.api_id, self.api_hash).start(
-                bot_token=self.bot_token)
+    async def open(self) -> None:
+        self.client = await TelegramClient(self.app_name, self.api_id, self.api_hash).start(bot_token=self.bot_token)
 
     async def test(self) -> bool:
-        await self._init()
         return type(await self.client.get_entity('me')) is User
 
     async def alert(self, message: str) -> None:
-        await self._init()
         await self.client.send_message(self.recipient, message)
 
     async def close(self) -> None:

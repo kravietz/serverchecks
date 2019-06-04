@@ -1,4 +1,5 @@
 import aioxmpp
+from aioxmpp import PresenceManagedClient
 
 from serverchecks.alerts import AbstractAlert
 
@@ -14,7 +15,9 @@ class XmppAlert(AbstractAlert):
         self.sender = aioxmpp.JID.fromstr(kwargs['sender'])
         self.recipient = aioxmpp.JID.fromstr(kwargs['recipient'])
         self.password = aioxmpp.make_security_layer(kwargs['password'])
-        self.client = aioxmpp.PresenceManagedClient(self.sender, self.password)
+        self.client: PresenceManagedClient = PresenceManagedClient(self.sender, self.password)
+
+    async def open(self) -> None:
         self.client.start()
 
     async def alert(self, message: str):
