@@ -51,9 +51,15 @@ async def command(config_file: str = None) -> None:
             if verbose:
                 print(f'Initialized alert class {alert}')
 
+    if verbose:
+        print(f'Opening {len(alerts)} alert transports')
+
     # open alert transports
     transport_tasks = [instance.open() for instance in alerts]
     await run_alerts(transport_tasks)
+
+    if verbose:
+        print(f'{len(alerts)} alert transports opened')
 
     # initialize the list of checks
     checks: List[AbstractCheck] = []
@@ -70,8 +76,14 @@ async def command(config_file: str = None) -> None:
             check = mod.check_class(**target)
             checks.append(check)
 
+            if verbose:
+                print(f'Initialized check class {check}')
+
     # start the main test & alerting loop
     continuous_run: bool = True
+
+    if verbose:
+        print(f'Entering loop with {len(checks)} checks and {len(alerts)} alerts')
 
     while continuous_run:
         try:
@@ -94,6 +106,8 @@ async def command(config_file: str = None) -> None:
 
     # clean up and close all active alert transports
     # this is important with some transports such as XMPP which may keep connection state on the server-side
+    if verbose:
+        print(f'Closing {len(alerts)} alert transports')
     transport_tasks = [instance.close() for instance in alerts]
     await run_alerts(transport_tasks)
 
