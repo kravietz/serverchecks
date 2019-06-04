@@ -115,4 +115,10 @@ async def command(config_file: str = None) -> None:
 
 
 if __name__ == "__main__":
-    asyncio.run(command())
+    if hasattr(asyncio, 'run'):
+        # for Python 3.7+
+        asyncio.run(command())
+    else:
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(command())
+        loop.close()
