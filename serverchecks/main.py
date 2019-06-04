@@ -103,7 +103,7 @@ async def command(config_file: str = None) -> None:
             result: Outcome = await run_checks([instance.check() for instance in checks])
 
             if verbose:
-                print(f'Checks round completed, status {result.status}')
+                print(f'Checks round completed, status {result.status}: {result.summary}')
 
             # alerts are only sent if checks have failed, or if alert mode is set to `always`
             if result.status == False or alert_mode == 'always':
