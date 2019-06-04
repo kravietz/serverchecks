@@ -1,4 +1,4 @@
-VERSION = (0, 6, 0)
+VERSION = (0, 5, 1)
 
 __title__ = 'serverchecks'
 __version_info__ = VERSION
