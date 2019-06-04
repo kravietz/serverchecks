@@ -1,3 +1,5 @@
+# these are only installed during build process
+# end-user install dependencies are specified through setup.py
 pycryptodomex
 ecdsa
 aioxmpp
