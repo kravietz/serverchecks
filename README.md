@@ -18,6 +18,11 @@ third-party Python libraries.
 | Telegram| Alerts: Telegram                                                             | `pip3 install serverchecks[telegram]` |
 | Matrix | Alerts: Matrix                                                                | `pip3 install serverchecks[matrix]` | 
 
+Shortcut to install all flavors:
+
+```
+pip3 install serverchecks[dnssec,xmpp,telegram,matrix]
+```
 
 ## Usage
 Create a basic configuration file `checks.yaml`:
