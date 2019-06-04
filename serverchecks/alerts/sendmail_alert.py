@@ -1,7 +1,7 @@
 from asyncio import create_subprocess_exec
 from asyncio.subprocess import Process
 from email.mime.text import MIMEText
-from subprocess import PIPE
+from subprocess import PIPE  # nosec
 from typing import List
 
 from serverchecks.alerts import AbstractAlert
