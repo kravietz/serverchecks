@@ -10,15 +10,15 @@ class Pop3Check(AbstractCheck):
 
     def __init__(self, **kwargs) -> None:
         self.pop3_server: str = kwargs.get('pop3_server')
-        self.pop3_mode: int = kwargs.get('pop3_mode')
-        if self.pop3_mode not in ('pop3s_ssl', 'pop3_starttls'):
-            raise ValueError(f'pop3_mode must be one of pop3_ssl or pop3_starttls: {self.pop3_mode}')
+        self.tls_mode: int = kwargs.get('pop3_mode')
+        if self.tls_mode not in ('tls', 'starttls'):
+            raise ValueError(f'pop3_mode must be one of `tls` or `starttls`: {self.tls_mode}')
         self.username: Optional[str] = kwargs.get('username', None)
         self.password: Optional[str] = kwargs.get('password', None)
         self.pop3: Optional[Union[poplib.POP3_SSL, poplib.POP3]] = None
 
     async def check(self) -> Outcome:
-        if self.pop3_mode == 'pop3s_ssl':
+        if self.tls_mode == 'tls':
             self.pop3 = poplib.POP3_SSL(self.pop3_server)
         else:
             self.pop3 = poplib.POP3(self.pop3_server)

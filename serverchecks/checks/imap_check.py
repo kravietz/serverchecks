@@ -11,16 +11,16 @@ class ImapCheck(AbstractCheck):
     def __init__(self, **kwargs) -> None:
         self.imap_server: str = kwargs.get('imap_server')
 
-        self.imap_mode: str = kwargs.get('imap_mode')
-        if self.imap_mode not in ('imaps_ssl', 'imap_starttls'):
-            raise ValueError(f'imap_mode must be one of imaps_ssl or imap_starttls: {self.imap_mode}')
+        self.tls_mode: str = kwargs.get('tls_mode')
+        if self.tls_mode not in ('tls', 'starttls'):
+            raise ValueError(f'imap_mode must be one of `tls` or `starttls`: {self.tls_mode}')
 
         self.username: Optional[str] = kwargs.get('username', None)
         self.password: Optional[str] = kwargs.get('password', None)
         self.imap: Optional[Union[imaplib.IMAP4_SSL, imaplib.IMAP4]] = None
 
     async def check(self) -> Outcome:
-        if self.imap_mode == 'imaps_ssl':
+        if self.tls_mode == 'tls':
             self.imap: imaplib.IMAP4_SSL = imaplib.IMAP4_SSL(self.imap_server)
         else:
             self.imap: imaplib.IMAP4 = imaplib.IMAP4(self.imap_server)
