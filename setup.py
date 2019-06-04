@@ -15,7 +15,7 @@ setuptools.setup(
     description="",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    # url="https://github.com/pypa/sampleproject",
+    url="https://bitbucket.org/kravietz/serverchecks",
     keywords='network ping check test dns url availability imap pop3 smtp http dnssec',
     packages=packages,
     install_requires=('pyyaml'),
