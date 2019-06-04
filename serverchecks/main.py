@@ -11,6 +11,8 @@ from serverchecks import run_checks, run_alerts, Outcome
 from serverchecks.alerts import AbstractAlert
 from serverchecks.checks import AbstractCheck
 
+version = __import__('serverchecks').__version__
+author = __import__('serverchecks').__author__
 
 # must enter then async chain as soon as possible as any async-using objects (checks, alerts)
 # need to be defined inside the event loop; otherwise they will create their own event loops
@@ -29,7 +31,11 @@ async def command(config_file: str = None) -> None:
     run_mode: str = data.get('mode', 'once')
     interval: int = data.get('interval', 60)
     verbose: bool = data.get('verbose', False)
-    alert_mode: str = data.get('alert_mode', 'on_error')
+    alert_mode: str = data.get('alert', 'on_error')
+
+    if verbose:
+        print(
+            f'serverchecks {version} by {author} starting, alert_mode={alert_mode} run_mode={run_mode} interval={interval}')
 
     # initialize the alert transports
     alerts: List[AbstractAlert] = []
