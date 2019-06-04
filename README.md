@@ -8,77 +8,15 @@ Implemented in pure Python (no shell commands called) using `asyncio` library.
 ## Install
 The module comes in a number of flavours that provide additional features using
 third-party Python libraries.
-<table>
-<tr><th>Flavour</th><th>Features</th><th>Install</th>
 
-<tr><td>Core
-<td>
-Checks:
-<ul>
-<li>TCP
-<li>DNS (basic)
-<li>TLS
-<li>URL
-<li>POP3
-<li>SMTP
-<li>IMAP
-</ul>
-Alerts:
-<ul>
-<li>Console
-<li>SMTP
-</td>
-<td>
-<code>pip3 install serverchecks</code>
-</td>
-
-<tr><td>DNS
-<td>Checks:
-<ul>
-<li>DNS (full)
-</ul>
-<td>
-<code>pip3 install serverchecks[dns]</code>
-</td>
-
-<tr><td>DNSSEC
-<td>Checks:
-<ul>
-<li>DNSSEC
-<li>DNS (full)
-</ul>
-<td>
-<code>pip3 install serverchecks[dnssec]</code>
-</td>
-
-<tr><td>XMPP
-<td>Alerts:
-<ul>
-<li>XMPP
-</ul>
-<td>
-<code>pip3 install serverchecks[xmpp]</code>
-</td>
-
-<tr><td>Telegram
-<td>Alerts:
-<ul>
-<li>Telegram
-</ul>
-<td>
-<code>pip3 install serverchecks[telegram]</code>
-</td>
-
-<tr><td>Matrix
-<td>Alerts:
-<ul>
-<li>Matrix
-</ul>
-<td>
-<code>pip3 install serverchecks[matrix]</code>
-</td>
-
-</table>
+| Flavor | Features                                                                      | Install                          |
+|--------|-------------------------------------------------------------------------------|----------------------------------|
+| Core   | Checks: TCP, DNS (basic), TLS, URL, POP3, SMTP, IMAP. Alerts: console ,SMTP  | `pip3 install serverchecks`        |
+| DNS    | Checks: DNS (full)                                                            | `pip3 install serverchecks[dns]`   |
+| DNSSEC | Checks: DNSSEC, DNS (full)                                                    | `pip3 install serverchecks[dnssec]` |
+| XMPP   | Alerts: XMPP                                                                  | `pip3 install serverchecks[xmpp]`  |
+| Telegram| Alerts: Telegram                                                             | `pip3 install serverchecks[telegram]` |
+| Matrix | Alerts: Matrix                                                                | `pip3 install serverchecks[matrix]` | 
 
 
 ## Usage
