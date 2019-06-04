@@ -96,11 +96,21 @@ async def command(config_file: str = None) -> None:
             # if run mode is set to `once` just prevent the loop from repeating
             continuous_run = run_mode == 'continuous'
 
+            if verbose:
+                print(f'Executing {len(checks)} checks...')
+
             # generate list of callable coroutines from list of checks and pass to asyncio runner
             result: Outcome = await run_checks([instance.check() for instance in checks])
 
+            if verbose:
+                print(f'Checks round completed, status {result.status}')
+
             # alerts are only sent if checks have failed, or if alert mode is set to `always`
             if result.status == False or alert_mode == 'always':
+
+                if verbose:
+                    print(f'Sending {len(alerts)} alerts...')
+
                 send_alerts = [instance.alert(result.info) for instance in alerts]
                 await run_alerts(send_alerts)
 
