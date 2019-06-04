@@ -9,7 +9,3 @@ pipelines:
           - python3 -m pip install -r requirements.txt
           - python3 -m safety check
           - python3 -m bandit -r serverchecks
-          - pipe: snyk/snyk-scan:0.2.0
-            variables:
-              SNYK_TOKEN: $SNYK_TOKEN
-              LANGUAGE: "python-3"
