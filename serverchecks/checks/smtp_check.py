@@ -22,7 +22,7 @@ class SmtpCheck(AbstractCheck):
     async def check(self) -> Outcome:
         try:
             smtp = smtplib.SMTP(self.host, timeout=2.0, port=self.port)
-        except socket.timeout as e:
+        except (socket.timeout, ConnectionError) as e:
             return Outcome(False, f'SMTP {self.host}:{self.port} timed out: {e}')
 
         # STARTTLS usually requires EHLO
