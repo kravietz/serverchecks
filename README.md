@@ -29,7 +29,7 @@ Alerts:
 <li>SMTP
 </td>
 <td>
-<code>pip3 instal serverchecks</code>
+<code>pip3 install serverchecks</code>
 </td>
 
 <tr><td>DNS
@@ -38,7 +38,7 @@ Alerts:
 <li>DNS (full)
 </ul>
 <td>
-<code>pip3 instal serverchecks[dns]</code>
+<code>pip3 install serverchecks[dns]</code>
 </td>
 
 <tr><td>DNSSEC
@@ -48,7 +48,7 @@ Alerts:
 <li>DNS (full)
 </ul>
 <td>
-<code>pip3 instal serverchecks[dnssec]</code>
+<code>pip3 install serverchecks[dnssec]</code>
 </td>
 
 <tr><td>XMPP
@@ -57,7 +57,7 @@ Alerts:
 <li>XMPP
 </ul>
 <td>
-<code>pip3 instal serverchecks[xmpp]</code>
+<code>pip3 install serverchecks[xmpp]</code>
 </td>
 
 <tr><td>Telegram
@@ -66,7 +66,7 @@ Alerts:
 <li>Telegram
 </ul>
 <td>
-<code>pip3 instal serverchecks[telegram]</code>
+<code>pip3 install serverchecks[telegram]</code>
 </td>
 
 <tr><td>Matrix
@@ -75,7 +75,7 @@ Alerts:
 <li>Matrix
 </ul>
 <td>
-<code>pip3 instal serverchecks[matrix]</code>
+<code>pip3 install serverchecks[matrix]</code>
 </td>
 
 </table>
