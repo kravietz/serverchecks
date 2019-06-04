@@ -13,12 +13,12 @@ class DnssecCheck(AbstractCheck):
     name = 'DNSSEC'
 
     def __init__(self, **kwargs) -> None:
-        self.fqdn: str = kwargs.get('fqdn')
+        self.host: str = kwargs.get('host')
 
     async def check(self) -> Outcome:
 
         # convert string name to dnspython Name object
-        name: Name = dns.name.from_text(self.fqdn)
+        name: Name = dns.name.from_text(self.host)
 
         try:
             # First obtain the list of nameservers for the tested domain
@@ -66,7 +66,7 @@ class DnssecCheck(AbstractCheck):
                     return Outcome(True, f'DNSSEC fully validated for {name}')
 
     def __str__(self):
-        return f'<{self.name} "{self.fqdn}">'
+        return f'<{self.name} "{self.host}">'
 
 
 check_class = DnssecCheck

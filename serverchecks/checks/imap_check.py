@@ -9,7 +9,7 @@ class ImapCheck(AbstractCheck):
     name = 'IMAP'
 
     def __init__(self, **kwargs) -> None:
-        self.imap_server: str = kwargs.get('imap_server')
+        self.host: str = kwargs.get('host')
         self.tls_mode: str = kwargs.get('tls_mode')
         allowed = ('tls', 'starttls')
         if self.tls_mode not in allowed:
@@ -21,9 +21,9 @@ class ImapCheck(AbstractCheck):
 
     async def check(self) -> Outcome:
         if self.tls_mode == 'tls':
-            self.imap: imaplib.IMAP4_SSL = imaplib.IMAP4_SSL(self.imap_server)
+            self.imap: imaplib.IMAP4_SSL = imaplib.IMAP4_SSL(self.host)
         else:
-            self.imap: imaplib.IMAP4 = imaplib.IMAP4(self.imap_server)
+            self.imap: imaplib.IMAP4 = imaplib.IMAP4(self.host)
             try:
                 self.imap.starttls()
             except self.imap.error as e:
@@ -53,7 +53,7 @@ class ImapCheck(AbstractCheck):
         return Outcome(True, f'IMAP test successful on {self.imap.host}:{self.imap.port} (authenticated)')
 
     def __str__(self):
-        return f'<{self.name} {self.imap_server}>'
+        return f'<{self.name} {self.host}>'
 
 
 check_class = ImapCheck

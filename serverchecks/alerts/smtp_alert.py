@@ -15,8 +15,8 @@ class SmtpAlert(AbstractAlert):
         self.from_email: str = kwargs.get('from_email')
         self.to_email: str = kwargs.get('to_email')
         self.subject: str = kwargs.get('subject')
-        self.smtp_server: str = kwargs.get('smtp_server', 'localhost')
-        self.smtp_port: int = kwargs.get('smtp_port', 587)
+        self.host: str = kwargs.get('host', 'localhost')
+        self.port: int = kwargs.get('smtp_port', 587)
 
         # optional SMTP authentication parameters
         self.username: str = kwargs.get('username', None)
@@ -24,7 +24,7 @@ class SmtpAlert(AbstractAlert):
 
     async def open(self) -> None:
         # open SMTP server connection
-        self.smtp: smtplib.SMTP = smtplib.SMTP(self.smtp_server, timeout=5.0, port=self.smtp_port)
+        self.smtp: smtplib.SMTP = smtplib.SMTP(self.host, timeout=5.0, port=self.port)
         self.smtp.ehlo(socket.getfqdn())
         self.smtp.starttls()
         if self.username:

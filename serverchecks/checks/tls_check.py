@@ -56,7 +56,7 @@ class TlsCheck(AbstractCheck):
             return Outcome(True, f'Certificate for {self.host} valid until {not_after}')
 
     def __str__(self):
-        return f'<{self.name} {self.host}'
+        return f'<{self.name} {self.host}>'
 
 
 check_class = TlsCheck

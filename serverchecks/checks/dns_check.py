@@ -11,7 +11,7 @@ class DnsCheck(AbstractCheck):
     name = 'DNS'
 
     def __init__(self, **kwargs) -> None:
-        self.fqdn = kwargs.get('fqdn')
+        self.host = kwargs.get('host')
         self.records = kwargs.get('records', ('A', 'AAAA'))
         # XXX: implement delegation check
         self.check_delegation = kwargs.get('check_delegation', False)
@@ -20,13 +20,13 @@ class DnsCheck(AbstractCheck):
         ret: List = []
         try:
             for record in self.records:
-                ret.append(dns.resolver.query(self.fqdn, record).rrset)
+                ret.append(dns.resolver.query(self.host, record).rrset)
             return Outcome(True, str(ret))
         except DNSException as e:
-            return Outcome(False, f'DNS resolution for {self.fqdn} failed: {e}')
+            return Outcome(False, f'DNS resolution for {self.host} failed: {e}')
 
     def __str__(self):
-        return f'<{self.name} "{self.fqdn}" ({self.records})>'
+        return f'<{self.name} "{self.host}" ({self.records})>'
 
 
 check_class = DnsCheck

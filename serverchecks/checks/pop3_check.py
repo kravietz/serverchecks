@@ -9,7 +9,7 @@ class Pop3Check(AbstractCheck):
     name = 'POP3'
 
     def __init__(self, **kwargs) -> None:
-        self.pop3_server: str = kwargs.get('pop3_server')
+        self.host: str = kwargs.get('host')
         self.tls_mode: int = kwargs.get('tls_mode')
         allowed = ('tls', 'starttls')
         if self.tls_mode not in allowed:
@@ -20,9 +20,9 @@ class Pop3Check(AbstractCheck):
 
     async def check(self) -> Outcome:
         if self.tls_mode == 'tls':
-            self.pop3 = poplib.POP3_SSL(self.pop3_server)
+            self.pop3 = poplib.POP3_SSL(self.host)
         else:
-            self.pop3 = poplib.POP3(self.pop3_server)
+            self.pop3 = poplib.POP3(self.host)
 
             try:
                 self.pop3.stls()
@@ -53,7 +53,7 @@ class Pop3Check(AbstractCheck):
         return Outcome(True, f'POP3 test successful on {self.pop3.host}:{self.pop3.port} (authenticated)')
 
     def __str__(self):
-        return f'<{self.name} {self.pop3_server}>'
+        return f'<{self.name} {self.host}>'
 
 
 check_class = Pop3Check

@@ -10,16 +10,16 @@ class SmtpCheck(AbstractCheck):
     name = 'SMTP'
 
     def __init__(self, **kwargs) -> None:
-        self.smtp_server: str = kwargs.get('smtp_server')
-        self.smtp_port: int = kwargs.get('smtp_port', 25)
+        self.host: str = kwargs.get('host')
+        self.port: int = kwargs.get('port', 25)
         self.username: str = kwargs.get('username', None)
         self.password: str = kwargs.get('password', None)
 
     async def check(self) -> Outcome:
         try:
-            smtp = smtplib.SMTP(self.smtp_server, timeout=2.0, port=self.smtp_port)
+            smtp = smtplib.SMTP(self.host, timeout=2.0, port=self.port)
         except socket.timeout as e:
-            return Outcome(False, f'SMTP {self.smtp_server}:{self.smtp_port} timed out: {e}')
+            return Outcome(False, f'SMTP {self.host}:{self.port} timed out: {e}')
 
         # STARTTLS usually requires EHLO
         smtp.ehlo(socket.getfqdn())
@@ -27,7 +27,7 @@ class SmtpCheck(AbstractCheck):
         try:
             smtp.starttls()
         except smtplib.SMTPNotSupportedError as e:
-            return Outcome(False, f'SMTP STARTTLS failed on {self.smtp_server}:{self.smtp_port}: {e}')
+            return Outcome(False, f'SMTP STARTTLS failed on {self.host}:{self.port}: {e}')
 
         auth = 'not authenticated'
 
@@ -43,16 +43,16 @@ class SmtpCheck(AbstractCheck):
             try:
                 smtp.send_message(msg, self.username, self.username)
             except smtplib.SMTPException as e:
-                return Outcome(False, f'SMTP send failed on {self.smtp_server}:{self.smtp_port}: {e}')
+                return Outcome(False, f'SMTP send failed on {self.host}:{self.port}: {e}')
 
             auth = 'authenticated'
 
         smtp.quit()
 
-        return Outcome(True, f'SMTP successful on {self.smtp_server}:{self.smtp_port} ({auth})')
+        return Outcome(True, f'SMTP successful on {self.host}:{self.port} ({auth})')
 
     def __str__(self):
-        return f'<{self.name} {self.smtp_server}>'
+        return f'<{self.name} {self.host}>'
 
 
 check_class = SmtpCheck
