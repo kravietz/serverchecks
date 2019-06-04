@@ -44,7 +44,7 @@ class MatrixAlert(AbstractAlert):
         self.client.logout()
 
     def __str__(self) -> str:
-        return f'<{self.name}: ID={self.username} room={self.room_name}>'
+        return f'<{self.name}: {self.username} room={self.room_name}, {len(self.recipients)} recipients>'
 
 
 alert_class = MatrixAlert

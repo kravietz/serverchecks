@@ -1,6 +1,7 @@
 import smtplib
 import socket
 from email.message import EmailMessage
+from typing import List
 
 from serverchecks.alerts import AbstractAlert
 
@@ -13,7 +14,7 @@ class SmtpAlert(AbstractAlert):
 
     def __init__(self, **kwargs) -> None:
         self.from_email: str = kwargs.get('from_email')
-        self.to_email: str = kwargs.get('to_email')
+        self.recipients: List[str] = kwargs.get('recipients')
         self.subject: str = kwargs.get('subject')
         self.host: str = kwargs.get('host', 'localhost')
         self.port: int = kwargs.get('smtp_port', 587)
@@ -37,9 +38,9 @@ class SmtpAlert(AbstractAlert):
         msg = EmailMessage()
         msg.set_content(message)
         msg["From"] = self.from_email
-        msg["To"] = self.to_email
+        msg["Bcc"] = ';'.join(self.recipients)
         msg["Subject"] = self.subject
-        self.smtp.send_message(msg, self.from_email, self.to_email)
+        self.smtp.send_message(msg, self.from_email, self.recipients)
 
     async def close(self) -> None:
         self.smtp.quit()

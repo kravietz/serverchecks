@@ -1,4 +1,5 @@
-from typing import Optional
+import asyncio
+from typing import Optional, List
 
 from telethon import TelegramClient
 from telethon.tl.types import User
@@ -22,7 +23,7 @@ class TelegramAlert(AbstractAlert):
         self.api_id: int = int(kwargs.get('api_id'))
         self.api_hash: str = kwargs.get('api_hash')
         self.app_name: str = kwargs.get('app_name')
-        self.recipient: str = kwargs.get('recipient')
+        self.recipients: List[str] = kwargs.get('recipients')
         self.client: Optional[TelegramClient] = None
 
     async def open(self) -> None:
@@ -32,13 +33,13 @@ class TelegramAlert(AbstractAlert):
         return type(await self.client.get_entity('me')) is User
 
     async def alert(self, message: str) -> None:
-        await self.client.send_message(self.recipient, message)
+        await asyncio.gather(*[self.client.send_message(recipient, message) for recipient in self.recipients])
 
     async def close(self) -> None:
         await self.client.disconnect()
 
     def __str__(self):
-        return f'<{self.name} {self.app_name}>'
+        return f'<{self.name}: @{self.app_name}, {len(self.recipients)} recipients>'
 
 
 alert_class = TelegramAlert
