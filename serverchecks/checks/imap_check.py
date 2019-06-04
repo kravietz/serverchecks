@@ -10,10 +10,10 @@ class ImapCheck(AbstractCheck):
 
     def __init__(self, **kwargs) -> None:
         self.imap_server: str = kwargs.get('imap_server')
-
         self.tls_mode: str = kwargs.get('tls_mode')
-        if self.tls_mode not in ('tls', 'starttls'):
-            raise ValueError(f'imap_mode must be one of `tls` or `starttls`: {self.tls_mode}')
+        allowed = ('tls', 'starttls')
+        if self.tls_mode not in allowed:
+            raise ValueError(f'tls_mode must be one of {allowed}: {self.tls_mode}')
 
         self.username: Optional[str] = kwargs.get('username', None)
         self.password: Optional[str] = kwargs.get('password', None)
