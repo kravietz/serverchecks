@@ -1,0 +1,8 @@
+pycryptodomex
+ecdsa
+aioxmpp
+pyyaml
+dnspython
+aiogram
+matrix_client
+telethon
