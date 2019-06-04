@@ -1,0 +1,13 @@
+image: python:3.7.3
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - pip
+        script:
+          - pip install -r requirements.txt
+          - pipe: snyk/snyk-scan:0.2.0
+            variables:
+              SNYK_TOKEN: $SNYK_TOKEN
+              LANGUAGE: "python-3"
