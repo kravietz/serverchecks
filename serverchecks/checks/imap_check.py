@@ -19,6 +19,9 @@ class ImapCheck(AbstractCheck):
         self.password: Optional[str] = kwargs.get('password', None)
         self.imap: Optional[Union[imaplib.IMAP4_SSL, imaplib.IMAP4]] = None
 
+        if self.host is None:
+            raise ValueError(f'{self.name} required `host` parameter is missing')
+
     async def check(self) -> Outcome:
         if self.tls_mode == 'tls':
             self.imap: imaplib.IMAP4_SSL = imaplib.IMAP4_SSL(self.host)

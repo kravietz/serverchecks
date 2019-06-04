@@ -20,10 +20,10 @@ class MatrixAlert(AbstractAlert):
         self.username: str = kwargs.get('username')
         self.password: str = kwargs.get('password')
         self.server: str = kwargs.get('server')
-        self.domain: str = urlparse(self.server).hostname
         self.room_name: str = kwargs.get('room')
         self.recipients = kwargs.get('recipients')
 
+        self.domain: str = urlparse(self.server).hostname
         self.client: MatrixClient = MatrixClient(self.server)
 
     async def open(self) -> None:

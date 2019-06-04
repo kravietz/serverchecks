@@ -14,6 +14,9 @@ class UrlCheck(AbstractCheck):
         self.expect_code: int = kwargs.get('expect_code', 200)
         self.timeout: float = kwargs.get('timeout', 2.0)
 
+        if self.url is None:
+            raise ValueError(f'{self.name} required `url` parameter is missing')
+
     async def check(self) -> Outcome:
         try:
             ret = urlopen(self.url, timeout=self.timeout)

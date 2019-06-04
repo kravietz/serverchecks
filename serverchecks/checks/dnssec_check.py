@@ -15,6 +15,9 @@ class DnssecCheck(AbstractCheck):
     def __init__(self, **kwargs) -> None:
         self.host: str = kwargs.get('host')
 
+        if self.host is None:
+            raise ValueError(f'{self.name} required `host` parameter is missing')
+
     async def check(self) -> Outcome:
 
         # convert string name to dnspython Name object

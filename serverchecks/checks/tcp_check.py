@@ -12,6 +12,9 @@ class TcpCheck(AbstractCheck):
         self.port: int = kwargs.get('port')
         self.timeout: float = kwargs.get('timeout', 2.0)
 
+        if self.host is None:
+            raise ValueError(f'{self.name} required `host` parameter is missing')
+
     async def check(self) -> Outcome:
         try:
             with socket.create_connection((self.host, self.port), self.timeout) as sock:

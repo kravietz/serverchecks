@@ -16,6 +16,9 @@ class TlsCheck(AbstractCheck):
         self.cert_days: int = kwargs.get('cert_days', 5)
         self.timeout: float = kwargs.get('timeout', 2.0)
 
+        if self.host is None:
+            raise ValueError(f'{self.name} required `host` parameter is missing')
+
     def _date(self, d: str) -> Optional[datetime]:
         try:
             # try decoding locale representation first

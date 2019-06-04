@@ -1,6 +1,7 @@
 import smtplib
 import socket
 from email.message import EmailMessage
+from typing import Optional
 
 from serverchecks import Outcome
 from serverchecks.checks import AbstractCheck
@@ -12,8 +13,11 @@ class SmtpCheck(AbstractCheck):
     def __init__(self, **kwargs) -> None:
         self.host: str = kwargs.get('host')
         self.port: int = kwargs.get('port', 25)
-        self.username: str = kwargs.get('username', None)
-        self.password: str = kwargs.get('password', None)
+        self.username: Optional[str] = kwargs.get('username', None)
+        self.password: Optional[str] = kwargs.get('password', None)
+
+        if self.host is None:
+            raise ValueError(f'{self.name} required `host` parameter is missing')
 
     async def check(self) -> Outcome:
         try:

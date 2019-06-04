@@ -23,6 +23,9 @@ class BasicDnsAbstractCheck(AbstractCheck):
         self.host = kwargs.get('host')
         self.expect = kwargs.get('expect', [])
 
+        if self.host is None:
+            raise ValueError(f'{self.name} required `host` parameter is missing')
+
     async def check(self) -> Outcome:
         try:
             gai_result: List = socket.getaddrinfo(self.host, None, proto=socket.IPPROTO_TCP)

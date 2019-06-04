@@ -16,6 +16,9 @@ class DnsCheck(AbstractCheck):
         # XXX: implement delegation check
         self.check_delegation = kwargs.get('check_delegation', False)
 
+        if self.host is None:
+            raise ValueError(f'{self.name} required `host` parameter is missing')
+
     async def check(self) -> Outcome:
         ret: List = []
         try:

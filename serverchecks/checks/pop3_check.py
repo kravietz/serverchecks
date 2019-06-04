@@ -18,6 +18,9 @@ class Pop3Check(AbstractCheck):
         self.password: Optional[str] = kwargs.get('password', None)
         self.pop3: Optional[Union[poplib.POP3_SSL, poplib.POP3]] = None
 
+        if self.host is None:
+            raise ValueError(f'{self.name} required `host` parameter is missing')
+
     async def check(self) -> Outcome:
         if self.tls_mode == 'tls':
             self.pop3 = poplib.POP3_SSL(self.host)
