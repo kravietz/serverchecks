@@ -6,3 +6,5 @@ dnspython
 aiogram
 matrix_client
 telethon
+safety
+bandit
