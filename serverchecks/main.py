@@ -1,10 +1,18 @@
 import argparse
 import asyncio
 import importlib.util
+
+try:
+    # only available on Python 3.7+
+    import importlib.resources
+except ImportError:
+    from pkg_resources import resource_filename, cleanup_resources
+
 import sys
 from time import sleep
 from typing import Dict, List
 
+import yamale as yamale
 import yaml
 
 from serverchecks import run_checks, run_alerts, Outcome
@@ -20,12 +28,22 @@ author = __import__('serverchecks').__author__
 async def command(config_file: str = None) -> None:
     if not config_file:
         parser = argparse.ArgumentParser()
-        parser.add_argument('config_file', type=argparse.FileType('r'), help='Configuration file')
+        parser.add_argument('config_file', help='Configuration file')
         args = parser.parse_args()
         config_file = args.config_file
 
-    # load configuration data from YAML
-    data: Dict = yaml.load(config_file, Loader=yaml.SafeLoader)
+    # ensure configuration file syntax is correct and has all required fields
+    if hasattr(importlib, 'resources'):
+        with importlib.resources.path("serverchecks.schemas", "config.yaml") as schema_file:
+            schema = yamale.make_schema(schema_file)
+    else:
+        schema = yamale.make_schema(resource_filename("serverchecks.schemas", "config.yaml"))
+        cleanup_resources()
+
+    yamale.validate(schema, yamale.make_data(config_file))
+
+    # load validated configuration data
+    data: Dict = yaml.load(open(config_file), Loader=yaml.SafeLoader)
 
     # set some defaults
     run_mode: str = data.get('mode', 'once')

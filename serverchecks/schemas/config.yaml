@@ -1,0 +1,114 @@
+---
+# Schema syntax per https://github.com/23andMe/Yamale
+
+# This section defines the actual schema of the configuration file
+# Each field appearing here (until the next ---) must or may appear in config (depending on required flag)
+
+mode: enum('once','continuous', required=False)
+interval: int(min=1, required=False)
+verbose: bool(required=False)
+alert: enum('always','on_error', required=False)
+
+alerts:
+  console: list(include('console'), required=False)
+  matrix: list(include('matrix'), required=False)
+  sendmail: list(include('sendmail'), required=False)
+  smtp: list(include('smtp_alert'), required=False)
+  telegram: list(include('telegram'), required=False)
+  xmpp: list(include('xmpp'), required=False)
+
+checks:
+  basicdns: list(include('basicdns'), required=False)
+  dns: list(include('dns'), required=False)
+  dnssec: list(include('dnssec'), required=False)
+  imap: list(include('imap'), required=False)
+  pop3: list(include('pop3'), required=False)
+  smtp: list(include('smtp_check'), required=False)
+  tcp: list(include('tcp'), required=False)
+  tls: list(include('tls'), required=False)
+  url: list(include('url'), required=False)
+
+---
+# This section defines structures referenced by the above schema
+
+console:
+  dummy: null()
+
+basicdns:
+  host: str()
+  expect: list(ip(), required=False)
+
+dns:
+  host: str()
+  records: list(str(), required=False)
+
+dnssec:
+  host: str()
+
+imap:
+  host: str()
+  tls_mode: enum('tls', 'starttls')
+  username: str(required=False)
+  password: str(required=False)
+
+pop3:
+  host: str()
+  tls_mode: enum('tls', 'starttls')
+  username: str(required=False)
+  password: str(required=False)
+
+smtp_check:
+  host: str()
+  port: int(min=25, max=65535, required=False)
+  username: str(required=False)
+  password: str(required=False)
+
+tcp:
+  host: str()
+  port: int(min=1, max=65535)
+  timeout: num(required=False)
+
+tls:
+  host: str()
+  port: int(min=25, max=65535, required=False)
+  cert_days: int(required=False)
+  timeout: num(required=False)
+
+url:
+  url: 'regex("^http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")'
+  expect_code: int(min=100, max=600, required=False)
+  timeout: num(required=False)
+
+matrix:
+  server: 'regex("^http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+")'
+  username: str()
+  password: str()
+  room: str()
+  recipients: 'list(regex("^@\w+:\S+$"))'
+
+sendmail:
+  from_email: 'regex("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")'
+  recipients: list(str())
+  subject: str()
+  sendmail: str(required=False)
+
+smtp_alert:
+  from_email: 'regex("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")'
+  recipients: 'list(regex("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"))'
+  subject: str()
+  host: str(required=False)
+  port: int(min=25, max=65535, required=False)
+
+telegram:
+  bot_token: str()
+  api_id: int()
+  api_hash: str()
+  app_name: str()
+  recipients: list(str())
+
+xmpp:
+  sender: str()
+  password: str()
+  recipients: 'list(regex("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"))'
+
+

@@ -10,3 +10,4 @@ matrix_client
 telethon
 safety
 bandit
+yamale
