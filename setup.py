@@ -27,6 +27,7 @@ setuptools.setup(
         'telegram': ('telethon',),
     },
     entry_points={'console_scripts': ('serverchecks = serverchecks.main:command',)},
+    package_data={'': ['config.yaml']}),
     license='MIT',
     classifiers=[
         'Development Status :: 3 - Alpha',
