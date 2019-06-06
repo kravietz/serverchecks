@@ -18,7 +18,7 @@ setuptools.setup(
     url="https://bitbucket.org/kravietz/serverchecks",
     keywords='network ping check test dns url availability imap pop3 smtp http dnssec',
     packages=packages,
-    install_requires=('pyyaml'),
+    install_requires=('pyyaml','yamale'),
     extras_require={
         'dnssec': ('pycryptodomex', 'ecdsa', 'dnspython'),
         'dns': ('dnspython',),
