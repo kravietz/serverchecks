@@ -17,7 +17,7 @@ class SmtpAlert(AbstractAlert):
         self.recipients: List[str] = kwargs.get('recipients')
         self.subject: str = kwargs.get('subject')
         self.host: str = kwargs.get('host', 'localhost')
-        self.port: int = kwargs.get('smtp_port', 587)
+        self.port: int = kwargs.get('port', 587)
 
         # optional SMTP authentication parameters
         self.username: str = kwargs.get('username', None)

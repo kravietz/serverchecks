@@ -98,6 +98,8 @@ smtp_alert:
   subject: str()
   host: str(required=False)
   port: int(min=25, max=65535, required=False)
+  username: str(required=False)
+  password: str(required=False)
 
 telegram:
   bot_token: str()

@@ -11,10 +11,7 @@ class TelegramAlert(AbstractAlert):
     """
     Telegram alert class using Telethon pure-Python MTProto client library
 
-    https://docs.telethon.dev/en/latest/index.html
 
-    The application uses credentials that are obtained from https://my.telegram.org/apps and must be registered
-    as a bot with https://t.me/botfather (`bot_token`)
     """
     name = 'Telegram'
 
