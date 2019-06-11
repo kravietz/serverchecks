@@ -21,7 +21,7 @@ class TcpCheck(AbstractCheck):
     async def check(self) -> Outcome:
         try:
             r, w = await asyncio.wait_for(self._connect(), timeout=self.timeout)
-        except asyncio.TimeoutError:
+        except asyncio.TimeoutError as e:
             return Outcome(False, f'TCP connection to {self.host}:{self.port} failed: {e}')
         else:
             w.close()
