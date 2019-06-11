@@ -1,3 +1,4 @@
+import asyncio
 import socket
 from typing import List
 
@@ -28,7 +29,7 @@ class BasicDnsAbstractCheck(AbstractCheck):
 
     async def check(self) -> Outcome:
         try:
-            gai_result: List = socket.getaddrinfo(self.host, None, proto=socket.IPPROTO_TCP)
+            gai_result: List = await asyncio.get_running_loop().getaddrinfo(self.host, None, proto=socket.IPPROTO_TCP)
             gai_ips: List[str] = [x[4][0] for x in gai_result]
         except socket.gaierror as e:
             return Outcome(False, f'DNS resolution for {self.host} failed: {e}')
