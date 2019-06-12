@@ -29,13 +29,10 @@ class XmppAlert(AbstractAlert):
         self.client.start()
 
     async def alert(self, message: str):
-        tasks = []
         for recipient in self.recipients:
             msg = aioxmpp.Message(to=recipient, type_=aioxmpp.MessageType.CHAT)
             msg.body[None] = message
-            tasks.append(self.client.send(msg))
-
-        await asyncio.gather(*tasks)
+            asyncio.create_task(self.client.send(msg))
 
     async def close(self):
         self.client.stop()
