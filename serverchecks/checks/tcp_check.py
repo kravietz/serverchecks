@@ -10,7 +10,7 @@ class TcpCheck(AbstractCheck):
     def __init__(self, **kwargs) -> None:
         self.host: str = kwargs.get('host')
         self.port: int = kwargs.get('port')
-        self.timeout: float = kwargs.get('timeout', 2.0)
+        self.timeout: float = kwargs.get('timeout', 30.0)
 
         if self.host is None:
             raise ValueError(f'{self.name} required `host` parameter is missing')
