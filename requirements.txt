@@ -11,3 +11,4 @@ telethon
 safety
 bandit
 yamale
+aiohttp
