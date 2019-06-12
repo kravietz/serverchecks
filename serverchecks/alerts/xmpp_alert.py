@@ -32,7 +32,10 @@ class XmppAlert(AbstractAlert):
         for recipient in self.recipients:
             msg = aioxmpp.Message(to=recipient, type_=aioxmpp.MessageType.CHAT)
             msg.body[None] = message
-            asyncio.create_task(self.client.send(msg))
+            if hasattr(asyncio, 'create_task'):
+                asyncio.create_task(self.client.send(msg))
+            else:
+                asyncio.ensure_future(self.client.send(msg))
 
     async def close(self):
         self.client.stop()
