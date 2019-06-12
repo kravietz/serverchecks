@@ -37,6 +37,7 @@ console:
 basicdns:
   host: str()
   expect: list(ip(), required=False)
+  timeout: num(required=False)
 
 dns:
   host: str()

@@ -23,13 +23,17 @@ class BasicDnsAbstractCheck(AbstractCheck):
     def __init__(self, **kwargs):
         self.host = kwargs.get('host')
         self.expect = kwargs.get('expect', [])
+        self.timeout = kwargs.get('timeout', 30.0)
 
         if self.host is None:
             raise ValueError(f'{self.name} required `host` parameter is missing')
 
+    async def _connect(self) -> List:
+        return await asyncio.get_running_loop().getaddrinfo(self.host, None, proto=socket.IPPROTO_TCP)
+
     async def check(self) -> Outcome:
         try:
-            gai_result: List = await asyncio.get_running_loop().getaddrinfo(self.host, None, proto=socket.IPPROTO_TCP)
+            gai_result: List = await asyncio.wait_for(self._connect(), timeout=self.timeout)
             gai_ips: List[str] = [x[4][0] for x in gai_result]
         except socket.gaierror as e:
             return Outcome(False, f'DNS resolution for {self.host} failed: {e}')
